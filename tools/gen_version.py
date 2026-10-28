@@ -32,6 +32,8 @@ import re
 import subprocess
 import sys
 
+from theme_config import load_theme, logo_data_uri
+
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HEADER = os.path.join(REPO, "include", "wkali_version.h")
 WKALI_H = os.path.join(REPO, "include", "wkali.h")
@@ -138,13 +140,19 @@ def main(argv=None):
         return 0
     if argv and argv[0] == "--title":
         info = get_version_info()
-        print(f"WebKit Autoloader v{info['full']} by PLK (built {info['build_time']})")
+        brand = load_theme().get("brand") or "WebKit Autoloader"
+        print(f"{brand} v{info['full']} by PLK (built {info['build_time']})")
         return 0
 
     if len(argv) == 2 and argv[0] == "--page-config":
         info = get_version_info()
         config = {"version": info["full"], "buildTime": info["build_time"]}
+        theme = load_theme()
+        logo = logo_data_uri(theme)
+        if logo:
+            theme["logoSrc"] = logo
         data = "window.WKAL_PAGE = " + json.dumps(config).replace("<", "\\u003c") + ";\n"
+        data += "window.WKAL_THEME = window.WKAL_THEME || " + json.dumps(theme).replace("<", "\\u003c") + ";\n"
         write_if_changed(os.path.abspath(argv[1]), data.encode("utf-8"))
         return 0
 
@@ -156,6 +164,11 @@ def main(argv=None):
     # custom version) so the app label reflects what was built.
     with open(PARAM_TEMPLATE, "rb") as f:
         param = f.read()
+    brand = load_theme().get("brand")
+    if brand:
+        metadata = json.loads(param.decode("utf-8"))
+        metadata["localizedParameters"]["en-US"]["titleName"] = brand
+        param = (json.dumps(metadata, indent=4) + "\n").encode("utf-8")
     write_if_changed(
         PARAM_JSON, param.replace(VERSION_PLACEHOLDER, info["title"].encode("utf-8"))
     )

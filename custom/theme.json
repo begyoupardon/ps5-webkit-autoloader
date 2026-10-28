@@ -1,0 +1,15 @@
+{
+  "title": "Tardis WebKit Autoloader Installer",
+  "brand": "Tardis WebKit Autoloader",
+  "logo": "/logo.svg",
+  "colors": {
+    "background": "#080914",
+    "backgroundEnd": "#080914",
+    "surface": "#14152F",
+    "border": "#38385F",
+    "text": "#F5F5FF",
+    "muted": "#A6A2FF",
+    "accent": "#A6A2FF",
+    "accentEnd": "#0A00B0"
+  }
+}

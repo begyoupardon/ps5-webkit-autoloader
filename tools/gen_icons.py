@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Generate all derived icon assets from assets/icon.svg at build time.
+"""Generate PS5 and Windows icons from the stock or optional custom SVG.
 
-The master SVG is a full-bleed sphere with no padding and no background, so
-every generated asset gets a dark background and ~10% padding added.
+The stock sphere uses its existing padded wrapper. A custom/logo.svg mark is
+fitted inside a square tile with 10% safe padding and a theme color background.
 
 Outputs:
   assets/icon0.png                        PS5 homescreen icon (512x512)
@@ -18,9 +18,13 @@ import struct
 import subprocess
 import sys
 import tempfile
+import xml.etree.ElementTree as ET
+
+from theme_config import load_theme
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 MASTER = os.path.join(ROOT, "assets", "icon.svg")
+CUSTOM_MASTER = os.path.join(ROOT, "custom", "logo.svg")
 ICON0 = os.path.join(ROOT, "assets", "icon0.png")
 ICON_ICO = os.path.join(ROOT, "assets", "icon.ico")
 
@@ -64,6 +68,27 @@ def build_wrapper_svg(master_src):
         t=round(TRANSLATE, 3),
         s=round(SCALE, 6),
     )
+
+
+def build_custom_wrapper_svg(path):
+    """Fit a supplied SVG mark inside a square tile with 10% safe padding."""
+    svg_ns = "http://www.w3.org/2000/svg"
+    ET.register_namespace("", svg_ns)
+    root = ET.parse(path).getroot()
+    if root.tag != "{%s}svg" % svg_ns:
+        raise ValueError("custom/logo.svg must have an SVG root element")
+    # Nested SVG preserves the mark's own viewBox, fill and proportions.
+    root.set("x", "102")
+    root.set("y", "102")
+    root.set("width", "820")
+    root.set("height", "820")
+    theme = load_theme()
+    background = theme.get("colors", {}).get("accentEnd", "#0f172a")
+    return (
+        '<svg xmlns="%s" viewBox="0 0 1024 1024">'
+        '<rect width="1024" height="1024" fill="%s"/>'
+        '%s</svg>'
+    ) % (svg_ns, background, ET.tostring(root, encoding="unicode"))
 
 
 def rsvg_render(svg_path, size):
@@ -113,10 +138,14 @@ def build_ico(pngs):
 
 
 def main():
-    with open(MASTER, "r") as f:
-        master_src = f.read()
-
-    wrapper = build_wrapper_svg(master_src)
+    if os.path.isfile(CUSTOM_MASTER):
+        wrapper = build_custom_wrapper_svg(CUSTOM_MASTER)
+        source = "custom/logo.svg"
+    else:
+        with open(MASTER, "r") as f:
+            master_src = f.read()
+        wrapper = build_wrapper_svg(master_src)
+        source = "assets/icon.svg"
     render = find_renderer()
 
     with tempfile.TemporaryDirectory(prefix="wkal-icon-") as tmp:
@@ -131,7 +160,7 @@ def main():
         with open(ICON_ICO, "wb") as f:
             f.write(build_ico(pngs))
 
-    print("Generated icon assets from assets/icon.svg:")
+    print("Generated icon assets from %s:" % source)
     for path in (ICON0, ICON_ICO):
         print(f"  {os.path.relpath(path, ROOT)} ({os.path.getsize(path)} bytes)")
     return 0

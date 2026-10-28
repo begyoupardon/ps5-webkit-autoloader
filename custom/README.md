@@ -18,5 +18,9 @@ At build time, these files customize the on-console installer page. Placed
 beside a generated PC host at runtime, they customize the PC setup pages.
 Runtime files cannot change an installer ELF that has already been built. The
 appearance does not alter the exploit chain, payload behavior, or homescreen
-icon. To customize the PS5 homescreen icon, replace `assets/icon.svg` with your own art
-and run the normal release build; that icon is generated separately.
+icon at runtime. During a release build, `theme.json` also sets the PS5 app
+name and the cached autoloader page's colors and header. `logo.svg` is fitted
+inside a square icon tile; the tile background uses `colors.accentEnd`.
+The generated homescreen and Windows icons use the same tile. If no custom SVG
+exists, the stock `assets/icon.svg` is used. Commit this folder to your fork
+before running the release workflow so CI receives the same theme assets.

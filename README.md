@@ -44,6 +44,12 @@ The provided starter files are safe to edit and are not overwritten by builds:
 - `custom/logo.svg` (or `logo.png` / `logo.webp`) supplies your logo.
 - `custom/theme.css` adds CSS after the built-in installer styles.
 
+During a release build, `custom/theme.json` also sets the PS5 homescreen app
+name and the cached autoloader page's colors and header. `custom/logo.svg` is
+rendered with padding onto a square icon tile for the PS5 homescreen and Windows
+host. The cached page embeds the logo, so it remains fully offline. Commit these
+custom files in your fork before running the GitHub release workflow.
+
 For a forked release, edit these files and use `./build_release.sh`; the theme
 is embedded in the installer ELF. With a PC host built from this version, you
 can also place `custom/` beside the downloaded host script or executable. Its
@@ -55,10 +61,8 @@ time. For local page work, use `make page` as usual; custom installer branding
 is bundled when you build the installer registry with `make registry` or `make all`. See
 [`custom/README.md`](custom/README.md) for the JSON shape and allowed values.
 
-The PS5 homescreen app icon is
-generated separately from `assets/icon.svg`; replacing that asset customizes the
-icon in release builds. The PC setup host's title and icon are separate build
-settings.
+Without `custom/logo.svg`, the icon generator uses `assets/icon.svg`. PNG and
+WebP logos can brand the web pages, but the homescreen icon generator uses SVG.
 
 ### Not jailbroken yet
 

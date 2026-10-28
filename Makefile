@@ -81,11 +81,8 @@ test:
 test-native:
 	$(PYTHON) $(LOADER)/tools/installer_common_test.py
 
-icons: $(ICONS) $(INSTALLER_LOGO)
-assets/icon0.png: assets/icon.svg tools/gen_icons.py
+icons: $(INSTALLER_LOGO)
 	$(PYTHON) tools/gen_icons.py
-assets/icon.ico: assets/icon0.png
-	@test -f $@ || $(PYTHON) tools/gen_icons.py
 
 $(INSTALLER_LOGO): assets/icon.svg
 	cp $< $@
@@ -134,7 +131,7 @@ $(ELF): registry icons $(SRCS) $(wildcard include/*.h) $(INSTALLER_COMMON_HEADER
 HOST_RELAPSE := build/host/relapse.html
 HOST_POOPS := build/host/poops.html
 
-host: $(HOST_PAYLOAD) payload-deps assets/icon.ico
+host: $(HOST_PAYLOAD) payload-deps icons
 	@mkdir -p build/host
 	$(PYTHON) tools/gen_version.py --page-config $(PAGE_CONFIG)
 	$(BUILDER) $(CURDIR)/payloads/elfldr-check.js payloads/relapse.js $(CURDIR)/payloads/autoload.js::$(HOST_PAYLOAD_VIRTUAL) \

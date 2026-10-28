@@ -1,15 +1,17 @@
-# Custom installer appearance
+# Optional custom appearance
 
-Put your custom installer theme in this directory. The build copies supported
-files into the offline installer cache; no runtime network access is needed.
+Create a `custom/` directory at the repository root only when you want a
+branded build. Without it, releases use the stock WebKit Autoloader name,
+logo, and colors. The build copies supported files into the offline installer
+cache; no runtime network access is needed.
 
-- Edit `theme.json` to set brand text, logo, and built-in color tokens.
-- Replace `logo.svg` with your own SVG, or use `logo.png` / `logo.webp`, then
+- Add `custom/theme.json` to set brand text, logo, and built-in color tokens.
+- Add `custom/logo.svg` with your SVG, or use `logo.png` / `logo.webp`, then
   set the matching path (`/logo.svg`, `/logo.png`, or `/logo.webp`) in `theme.json`.
-- Edit `theme.css` for additional layout or visual changes. It loads after the
+- Add `custom/theme.css` for additional layout or visual changes. It loads after the
   built-in styles and may override them.
 
-The JSON file is optional; absent files use the stock project appearance. Color
+All files are optional; absent files use the stock project appearance. Color
 values must be CSS hex colors (`#RGB`, `#RRGGBB`, or alpha variants). The logo
 path must be one of `/logo.svg`, `/logo.png`, or `/logo.webp`. Text is inserted
 as text, not HTML.
@@ -22,5 +24,6 @@ icon at runtime. During a release build, `theme.json` also sets the PS5 app
 name and the cached autoloader page's colors and header. `logo.svg` is fitted
 inside a square icon tile; the tile background uses `colors.accentEnd`.
 The generated homescreen and Windows icons use the same tile. If no custom SVG
-exists, the stock `assets/icon.svg` is used. Commit this folder to your fork
-before running the release workflow so CI receives the same theme assets.
+exists, the stock `assets/icon.svg` is used. Commit `custom/` only when your
+release should include those assets; a clean checkout without it builds the
+stock appearance.

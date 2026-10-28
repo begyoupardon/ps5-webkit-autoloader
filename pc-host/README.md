@@ -23,7 +23,7 @@ match the file. Restart the host after changes. The host embeds these files
 directly into its HTML response, so the PS5 does not make separate theme asset
 requests during exploit startup. The later installer page is served from the
 installer ELF on the PS5 and only uses a theme bundled when that ELF was built.
-See [`../custom/README.md`](../custom/README.md) for the JSON options.
+See [`../docs/customization.md`](../docs/customization.md) for the JSON options.
 
 Run the generated script, set the PS5's DNS to your PC's IP, then open Settings →
 User's Guide. The page runs the exploit and installer; reboot after installation.

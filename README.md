@@ -36,19 +36,23 @@ There are two ways to set up the autoloader, depending on whether you're already
 
 ### Customize the installer (forks)
 
-The installer supports an optional `custom/` directory for your fork's branding.
-The provided starter files are safe to edit and are not overwritten by builds:
+The default release uses the stock WebKit Autoloader name, logo, and colors.
+To brand your own build, create an optional `custom/` directory at the repository
+root with any of these files:
 
 - `custom/theme.json` sets the installer title, brand text, logo path, and color
   tokens.
 - `custom/logo.svg` (or `logo.png` / `logo.webp`) supplies your logo.
 - `custom/theme.css` adds CSS after the built-in installer styles.
 
+If an older branded version is already installed on a PS5, run the new stock
+installer and reboot to update its homescreen name, icon, and cached page.
+
 During a release build, `custom/theme.json` also sets the PS5 homescreen app
 name and the cached autoloader page's colors and header. `custom/logo.svg` is
 rendered with padding onto a square icon tile for the PS5 homescreen and Windows
-host. The cached page embeds the logo, so it remains fully offline. Commit these
-custom files in your fork before running the GitHub release workflow.
+host. The cached page embeds the logo, so it remains fully offline. Add and
+commit these files only in a fork that should ship that branding.
 
 For a forked release, edit these files and use `./build_release.sh`; the theme
 is embedded in the installer ELF. With a PC host built from this version, you
@@ -59,7 +63,7 @@ editing them. This runtime folder styles the PC setup pages; the installer page
 served later by the PS5 uses the theme embedded in the installer ELF at build
 time. For local page work, use `make page` as usual; custom installer branding
 is bundled when you build the installer registry with `make registry` or `make all`. See
-[`custom/README.md`](custom/README.md) for the JSON shape and allowed values.
+[`docs/customization.md`](docs/customization.md) for the JSON shape and allowed values.
 
 Without `custom/logo.svg`, the icon generator uses `assets/icon.svg`. PNG and
 WebP logos can brand the web pages, but the homescreen icon generator uses SVG.

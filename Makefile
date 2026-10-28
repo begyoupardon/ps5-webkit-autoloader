@@ -72,6 +72,7 @@ print-version:
 	@echo $(BUILD_VERSION)
 
 test:
+	$(PYTHON) tools/test_host_console.py
 	node tools/test_elfldr_check.js
 	node tools/test_autoload_payload.js
 	node tools/test_installer.js
@@ -152,6 +153,7 @@ host: $(HOST_PAYLOAD) payload-deps assets/icon.ico
 	    --page poops.html=$(HOST_POOPS) \
 	    --version $(BUILD_VERSION) --name "PS5 WEBKIT AUTOLOADER" --output webkit-autoloader-host.py
 	$(PYTHON) tools/add_runtime_custom.py webkit-autoloader-host.py
+	$(PYTHON) tools/fix_host_console.py webkit-autoloader-host.py
 
 dev: page
 	$(PYTHON) -m http.server 8123 --bind 127.0.0.1 --directory build/autoloader

@@ -78,6 +78,11 @@ jobs:
     needs: build-linux
     runs-on: windows-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -94,6 +99,11 @@ jobs:
 
       - name: Build Windows Executable
         run: pyinstaller --onefile --noconfirm --icon assets/icon.ico --name webkit-autoloader-host_v${{ needs.build-linux.outputs.full_version }} "webkit-autoloader-host_v${{ needs.build-linux.outputs.full_version }}.py"
+
+      - name: Verify Windows host console
+        run: |
+          python tools/test_host_console.py
+          python tools/test_windows_host.py "dist/webkit-autoloader-host_v${{ needs.build-linux.outputs.full_version }}.exe"
 
       - name: Upload Windows Executable Artifact
         uses: actions/upload-artifact@v4

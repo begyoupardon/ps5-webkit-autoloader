@@ -84,6 +84,13 @@ test-native:
 icons: $(INSTALLER_LOGO)
 	$(PYTHON) tools/gen_icons.py
 
+# A Docker `make all` already renders these files into the bind-mounted tree.
+# The subsequent host packaging step can reuse them on runners without rsvg.
+assets/icon0.png: assets/icon.svg tools/gen_icons.py $(wildcard custom/logo.svg custom/theme.json)
+	$(PYTHON) tools/gen_icons.py
+assets/icon.ico: assets/icon0.png
+	@test -f $@ || $(PYTHON) tools/gen_icons.py
+
 $(INSTALLER_LOGO): assets/icon.svg
 	cp $< $@
 
@@ -131,7 +138,7 @@ $(ELF): registry icons $(SRCS) $(wildcard include/*.h) $(INSTALLER_COMMON_HEADER
 HOST_RELAPSE := build/host/relapse.html
 HOST_POOPS := build/host/poops.html
 
-host: $(HOST_PAYLOAD) payload-deps icons
+host: $(HOST_PAYLOAD) payload-deps assets/icon.ico
 	@mkdir -p build/host
 	$(PYTHON) tools/gen_version.py --page-config $(PAGE_CONFIG)
 	$(BUILDER) $(CURDIR)/payloads/elfldr-check.js payloads/relapse.js $(CURDIR)/payloads/autoload.js::$(HOST_PAYLOAD_VIRTUAL) \

@@ -34,6 +34,31 @@ There are two ways to set up the autoloader, depending on whether you're already
 3. The installer opens the browser to cache the autoloader page (choose Poops or Relapse if prompted), creates the **WebKit Autoloader** app on the homescreen, and exits.
 4. **Reboot once**, then launch **WebKit Autoloader** from the homescreen.
 
+### Customize the installer (forks)
+
+The installer supports an optional `custom/` directory for your fork's branding.
+The provided starter files are safe to edit and are not overwritten by builds:
+
+- `custom/theme.json` sets the installer title, brand text, logo path, and color
+  tokens.
+- `custom/logo.svg` (or `logo.png` / `logo.webp`) supplies your logo.
+- `custom/theme.css` adds CSS after the built-in installer styles.
+
+For a forked release, edit these files and use `./build_release.sh`; the theme
+will be included in the installer ELF and PC setup host. If you download an
+already-built PC host, you can also place a `custom/` folder beside the host
+script or executable and put `theme.json`, `theme.css`, and `logo.svg` (or
+`logo.png` / `logo.webp`) inside it. Restart the host after editing the files.
+Those files are served locally and are never fetched from the internet. For
+local page work, use `make page` as usual; custom installer branding is bundled
+when you build the installer registry with `make registry` or `make all`. See
+[`custom/README.md`](custom/README.md) for the JSON shape and allowed values.
+
+This feature customizes the installer page only. The PS5 homescreen app icon is
+generated separately from `assets/icon.svg`; replacing that asset customizes the
+icon in release builds. The PC setup host's title and icon are separate build
+settings.
+
 ### Not jailbroken yet
 
 If you aren't jailbroken yet, you'll need to host the exploit locally on your PC for the initial setup:

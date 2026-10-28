@@ -46,6 +46,12 @@ STAGE := frontend/dist
 REGISTRY := include/file_registry.h include/file_registry.c
 ICONS := assets/icon0.png assets/icon.ico
 INSTALLER_LOGO := frontend/installer-page/logo.svg
+CUSTOM_DIR := custom
+CUSTOM_CONFIG := $(CUSTOM_DIR)/theme.json
+CUSTOM_LOGO_SVG := $(CUSTOM_DIR)/logo.svg
+CUSTOM_LOGO_PNG := $(CUSTOM_DIR)/logo.png
+CUSTOM_LOGO_WEBP := $(CUSTOM_DIR)/logo.webp
+CUSTOM_CSS := $(CUSTOM_DIR)/theme.css
 HOST_PAYLOAD ?= $(ELF)
 PAYLOAD_TAG ?= $(shell git -C third_party/ps5-unified-autoloader describe --tags --always 2>/dev/null || echo v0.1.6-e7093cd)
 AUTOLOAD_PAYLOAD_VIRTUAL ?= ps5-unified-autoloader-$(PAYLOAD_TAG).elf
@@ -104,6 +110,11 @@ registry: version page $(INSTALLER_LOGO)
 	rm -rf $(STAGE)
 	@mkdir -p $(STAGE)/app/$(BUILD_VERSION)
 	cp frontend/installer-page/index.html $(INSTALLER_LOGO) $(STAGE)/
+	@if [ -f "$(CUSTOM_CONFIG)" ]; then cp "$(CUSTOM_CONFIG)" $(STAGE)/theme.json; fi
+	@if [ -f "$(CUSTOM_LOGO_SVG)" ]; then cp "$(CUSTOM_LOGO_SVG)" $(STAGE)/custom-logo.svg; \
+	elif [ -f "$(CUSTOM_LOGO_PNG)" ]; then cp "$(CUSTOM_LOGO_PNG)" $(STAGE)/custom-logo.png; \
+	elif [ -f "$(CUSTOM_LOGO_WEBP)" ]; then cp "$(CUSTOM_LOGO_WEBP)" $(STAGE)/custom-logo.webp; fi
+	@if [ -f "$(CUSTOM_CSS)" ]; then cp "$(CUSTOM_CSS)" $(STAGE)/custom-theme.css; fi
 	cp frontend/pointer/index.html $(STAGE)/app/index.html
 	@for chain in $(CHAINS); do \
 	    cp build/autoloader/$$chain.html $(STAGE)/app/$(BUILD_VERSION)/$$chain.html || exit 1; \
@@ -134,6 +145,7 @@ host: $(HOST_PAYLOAD) payload-deps assets/icon.ico
 	    --page index.html=$(HOST_RELAPSE) \
 	    --page poops.html=$(HOST_POOPS) \
 	    --version $(BUILD_VERSION) --name "PS5 WEBKIT AUTOLOADER" --output webkit-autoloader-host.py
+	$(PYTHON) tools/add_runtime_custom.py webkit-autoloader-host.py
 
 dev: page
 	$(PYTHON) -m http.server 8123 --bind 127.0.0.1 --directory build/autoloader

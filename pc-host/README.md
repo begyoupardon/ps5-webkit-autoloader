@@ -7,6 +7,22 @@ repository does not maintain a separate DNS/HTTPS implementation. The generated
 automatically routes firmwares where Relapse is unsupported (9.05) to Poops.
 It needs only Python's standard library.
 
+Optional runtime installer branding can be supplied without rebuilding. Create
+a `custom/` folder beside the `.py` host script or `.exe`, then place any of
+these files in it:
+
+```text
+custom/theme.json
+custom/theme.css
+custom/logo.svg
+```
+
+PNG and WebP logos are also supported as `logo.png` or `logo.webp`. In
+`theme.json`, set `"logo"` to `/custom-logo.svg`, `/custom-logo.png`, or
+`/custom-logo.webp` to match the file. Restart the host after changes. Missing
+files use the embedded theme. See [`../custom/README.md`](../custom/README.md)
+for the JSON options.
+
 Run the generated script, set the PS5's DNS to your PC's IP, then open Settings →
 User's Guide. The page runs the exploit and installer; reboot after installation.
 On systems requiring elevated privileges for ports 53/443, run the host with sudo.

@@ -5,7 +5,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WebKit Autoloader Installer v[[VERSION_PLACEHOLDER]] by PLK (built [[BUILD_TIME_PLACEHOLDER]])</title>
-  <style>
+  <style id="baseTheme">
+    :root { --theme-background:#0f172a; --theme-background-end:#0b1220; --theme-surface:#1b2436; --theme-border:#2c3e5a; --theme-text:#e2e8f0; --theme-muted:#94a3b8; --theme-accent:#38bdf8; --theme-accent-end:#2563eb; }
     * {
       margin: 0;
       padding: 0;
@@ -20,9 +21,9 @@
 
     body {
       font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
-      background: #0f172a;
-      background: -webkit-linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
-      color: #e2e8f0;
+      background: var(--theme-background);
+      background: -webkit-linear-gradient(180deg, var(--theme-background) 0%, var(--theme-background-end) 100%);
+      color: var(--theme-text);
       display: -webkit-box;
       display: -webkit-flex;
       display: flex;
@@ -73,13 +74,13 @@
     p {
       font-size: 1.375rem;
       line-height: 1.5;
-      color: #94a3b8;
+      color: var(--theme-muted);
     }
 
     #status {
       font-size: 1.5rem;
       font-weight: 500;
-      color: #38bdf8;
+      color: var(--theme-accent);
       margin-bottom: 0.5rem;
     }
 
@@ -89,8 +90,8 @@
       max-width: 30rem;
       height: 1.25rem;
       margin: 1.75rem auto 0;
-      background: #1b2436;
-      border: 1px solid #2c3e5a;
+      background: var(--theme-surface);
+      border: 1px solid var(--theme-border);
       border-radius: 8px;
       overflow: hidden;
     }
@@ -101,8 +102,8 @@
       left: 0;
       height: 100%;
       width: 100%;
-      background: #38bdf8;
-      background: -webkit-linear-gradient(90deg, #2563eb 0%, #38bdf8 100%);
+      background: var(--theme-accent);
+      background: -webkit-linear-gradient(90deg, var(--theme-accent-end) 0%, var(--theme-accent) 100%);
       -webkit-transform: scaleX(0);
       transform: scaleX(0);
       -webkit-transform-origin: left center;
@@ -175,8 +176,8 @@
     }
 
     #cacheCorruptOverlay .card {
-      background: #1b2436;
-      border: 1px solid #2c3e5a;
+      background: var(--theme-surface);
+      border: 1px solid var(--theme-border);
       border-radius: 12px;
       max-width: 34rem;
       padding: 2rem;
@@ -221,14 +222,14 @@
     }
 
     #cacheCorruptOverlay .btn.primary {
-      background: #2563eb;
-      background: -webkit-linear-gradient(90deg, #2563eb 0%, #38bdf8 100%);
+      background: var(--theme-accent-end);
+      background: -webkit-linear-gradient(90deg, var(--theme-accent-end) 0%, var(--theme-accent) 100%);
       color: #fff;
     }
 
     #cacheCorruptOverlay .btn.secondary {
       background: #334155;
-      color: #e2e8f0;
+      color: var(--theme-text);
     }
 
     #choice {
@@ -256,8 +257,8 @@
       -webkit-box-flex: 1;
       -webkit-flex: 1;
       flex: 1;
-      background: #1b2436;
-      border: 2px solid #2c3e5a;
+      background: var(--theme-surface);
+      border: 2px solid var(--theme-border);
       border-radius: 12px;
       padding: 1.5rem 1.25rem;
       display: -webkit-box;
@@ -282,7 +283,7 @@
 
     .choice-card:hover,
     .choice-card:focus {
-      border-color: #38bdf8;
+      border-color: var(--theme-accent);
       background-color: #22304a;
       -webkit-transform: translateY(-2px);
       transform: translateY(-2px);
@@ -298,7 +299,7 @@
     .choice-card .choice-title {
       font-size: 1.5rem;
       font-weight: 700;
-      color: #38bdf8;
+      color: var(--theme-accent);
       margin-bottom: 0.25rem;
     }
 
@@ -368,13 +369,14 @@
       #cacheCorruptOverlay .card { margin: 1rem; }
     }
   </style>
+  <link rel="stylesheet" href="/custom-theme.css" />
 
 </head>
 
 <body>
   <main>
-    <img class="logo" src="/logo.svg" alt="WebKit Autoloader" />
-    <h1>WebKit Autoloader Installer</h1>
+    <img class="logo" id="brandLogo" src="/logo.svg" alt="WebKit Autoloader" />
+    <h1 id="brandTitle">WebKit Autoloader Installer</h1>
     <p id="status">Caching content...</p>
     <p id="detail">Please wait a moment. Do not close this page yet!</p>
 
@@ -401,7 +403,7 @@
 
   </main>
 
-  <footer id="footer">WebKit Autoloader Installer v[[VERSION_PLACEHOLDER]] by PLK (built [[BUILD_TIME_PLACEHOLDER]])<br />This project is free and open source: github.com/itsPLK/ps5-webkit-autoloader</footer>
+  <footer id="footer"><span id="brandFooter">WebKit Autoloader Installer</span> v[[VERSION_PLACEHOLDER]] by PLK (built [[BUILD_TIME_PLACEHOLDER]])<br />This project is free and open source: github.com/itsPLK/ps5-webkit-autoloader</footer>
 
   <div id="cacheCorruptOverlay" role="dialog" aria-modal="true" aria-labelledby="repairTitle" aria-describedby="repairMessage" hidden>
     <div class="card">
@@ -417,6 +419,32 @@
 <script>
 (function () {
   'use strict';
+  // Custom branding is optional. A missing/invalid config leaves the stock UI intact.
+  if (typeof fetch === 'function' && document.documentElement && document.documentElement.style) fetch('/theme.json').then(function (response) {
+    if (!response.ok) throw new Error('No custom theme');
+    return response.json();
+  }).then(function (theme) {
+    if (!theme || typeof theme !== 'object') return;
+    var root = document.documentElement;
+    var colors = theme.colors || {};
+    var colorKeys = { background: '--theme-background', backgroundEnd: '--theme-background-end', surface: '--theme-surface', border: '--theme-border', text: '--theme-text', muted: '--theme-muted', accent: '--theme-accent', accentEnd: '--theme-accent-end' };
+    Object.keys(colorKeys).forEach(function (key) {
+      var value = colors[key];
+      if (typeof value === 'string' && /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(value)) root.style.setProperty(colorKeys[key], value);
+    });
+    function text(id, value) {
+      if (typeof value !== 'string' || !value.trim()) return;
+      var node = document.getElementById(id);
+      if (node) node.textContent = value;
+    }
+    text('brandTitle', theme.title);
+    text('brandFooter', theme.brand || theme.title);
+    var logo = theme.logo;
+    if (typeof logo === 'string' && /^\/(?:custom-logo\.(?:svg|png|webp)|logo\.svg)$/.test(logo)) {
+      var image = document.getElementById('brandLogo');
+      if (image) image.src = logo;
+    }
+  }).catch(function () {});
   var status = document.getElementById('status');
   var repair = document.getElementById('repair');
   var cache = window.applicationCache;

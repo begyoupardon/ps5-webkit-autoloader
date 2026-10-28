@@ -30,3 +30,10 @@ __pycache__/
 *.pyc
 *.log
 .for_reference/
+
+# Local custom installer appearance assets
+custom/logo.svg
+custom/logo.png
+custom/logo.webp
+custom/theme.css
+custom/theme.json

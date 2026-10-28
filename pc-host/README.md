@@ -18,8 +18,8 @@ custom/logo.svg
 ```
 
 PNG and WebP logos are also supported as `logo.png` or `logo.webp`. In
-`theme.json`, set `"logo"` to `/custom-logo.svg`, `/custom-logo.png`, or
-`/custom-logo.webp` to match the file. Restart the host after changes. Missing
+`theme.json`, set `"logo"` to `/logo.svg`, `/logo.png`, or `/logo.webp` to
+match the file. Restart the host after changes. Missing
 files use the embedded theme. See [`../custom/README.md`](../custom/README.md)
 for the JSON options.
 

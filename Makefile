@@ -111,10 +111,10 @@ registry: version page $(INSTALLER_LOGO)
 	@mkdir -p $(STAGE)/app/$(BUILD_VERSION)
 	cp frontend/installer-page/index.html $(INSTALLER_LOGO) $(STAGE)/
 	@if [ -f "$(CUSTOM_CONFIG)" ]; then cp "$(CUSTOM_CONFIG)" $(STAGE)/theme.json; fi
-	@if [ -f "$(CUSTOM_LOGO_SVG)" ]; then cp "$(CUSTOM_LOGO_SVG)" $(STAGE)/custom-logo.svg; \
-	elif [ -f "$(CUSTOM_LOGO_PNG)" ]; then cp "$(CUSTOM_LOGO_PNG)" $(STAGE)/custom-logo.png; \
-	elif [ -f "$(CUSTOM_LOGO_WEBP)" ]; then cp "$(CUSTOM_LOGO_WEBP)" $(STAGE)/custom-logo.webp; fi
-	@if [ -f "$(CUSTOM_CSS)" ]; then cp "$(CUSTOM_CSS)" $(STAGE)/custom-theme.css; fi
+	@if [ -f "$(CUSTOM_LOGO_SVG)" ]; then cp "$(CUSTOM_LOGO_SVG)" $(STAGE)/logo.svg; \
+	elif [ -f "$(CUSTOM_LOGO_PNG)" ]; then cp "$(CUSTOM_LOGO_PNG)" $(STAGE)/logo.png; \
+	elif [ -f "$(CUSTOM_LOGO_WEBP)" ]; then cp "$(CUSTOM_LOGO_WEBP)" $(STAGE)/logo.webp; fi
+	@if [ -f "$(CUSTOM_CSS)" ]; then cp "$(CUSTOM_CSS)" $(STAGE)/theme.css; fi
 	cp frontend/pointer/index.html $(STAGE)/app/index.html
 	@for chain in $(CHAINS); do \
 	    cp build/autoloader/$$chain.html $(STAGE)/app/$(BUILD_VERSION)/$$chain.html || exit 1; \

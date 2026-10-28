@@ -369,7 +369,7 @@
       #cacheCorruptOverlay .card { margin: 1rem; }
     }
   </style>
-  <link rel="stylesheet" href="/custom-theme.css" />
+  <link rel="stylesheet" href="/theme.css" />
 
 </head>
 
@@ -440,7 +440,7 @@
     text('brandTitle', theme.title);
     text('brandFooter', theme.brand || theme.title);
     var logo = theme.logo;
-    if (typeof logo === 'string' && /^\/(?:custom-logo\.(?:svg|png|webp)|logo\.svg)$/.test(logo)) {
+    if (typeof logo === 'string' && /^\/(?:logo\.(?:svg|png|webp))$/.test(logo)) {
       var image = document.getElementById('brandLogo');
       if (image) image.src = logo;
     }

@@ -14,7 +14,9 @@ values must be CSS hex colors (`#RGB`, `#RRGGBB`, or alpha variants). The logo
 path must be one of `/logo.svg`, `/logo.png`, or `/logo.webp`. Text is inserted
 as text, not HTML.
 
-The custom appearance only changes the installer page. It does not alter the
-exploit chain, payload behavior, homescreen icon, or setup host branding. To
-customize the PS5 homescreen icon, replace `assets/icon.svg` with your own art
+At build time, these files customize the on-console installer page. Placed
+beside a generated PC host at runtime, they customize the PC setup pages.
+Runtime files cannot change an installer ELF that has already been built. The
+appearance does not alter the exploit chain, payload behavior, or homescreen
+icon. To customize the PS5 homescreen icon, replace `assets/icon.svg` with your own art
 and run the normal release build; that icon is generated separately.

@@ -7,7 +7,7 @@ repository does not maintain a separate DNS/HTTPS implementation. The generated
 automatically routes firmwares where Relapse is unsupported (9.05) to Poops.
 It needs only Python's standard library.
 
-Optional runtime installer branding can be supplied without rebuilding. Create
+Optional PC setup page branding can be supplied without rebuilding. Create
 a `custom/` folder beside the `.py` host script or `.exe`, then place any of
 these files in it:
 
@@ -19,13 +19,19 @@ custom/logo.svg
 
 PNG and WebP logos are also supported as `logo.png` or `logo.webp`. In
 `theme.json`, set `"logo"` to `/logo.svg`, `/logo.png`, or `/logo.webp` to
-match the file. Restart the host after changes. Missing
-files use the embedded theme. See [`../custom/README.md`](../custom/README.md)
-for the JSON options.
+match the file. Restart the host after changes. The host embeds these files
+directly into its HTML response, so the PS5 does not make separate theme asset
+requests during exploit startup. The later installer page is served from the
+installer ELF on the PS5 and only uses a theme bundled when that ELF was built.
+See [`../custom/README.md`](../custom/README.md) for the JSON options.
 
 Run the generated script, set the PS5's DNS to your PC's IP, then open Settings →
 User's Guide. The page runs the exploit and installer; reboot after installation.
 On systems requiring elevated privileges for ports 53/443, run the host with sudo.
+Check that the IP printed by the host is the PC's address on the same LAN as
+the PS5. VPNs can make automatic detection choose an unreachable address; use
+`--ip <LAN-IP>` to override it. The host prints a DNS status line when the PS5
+first reaches it and an HTTP line when the User's Guide page is requested.
 
 For a local HTTP check without DNS or HTTPS:
 

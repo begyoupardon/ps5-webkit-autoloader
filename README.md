@@ -45,16 +45,17 @@ The provided starter files are safe to edit and are not overwritten by builds:
 - `custom/theme.css` adds CSS after the built-in installer styles.
 
 For a forked release, edit these files and use `./build_release.sh`; the theme
-will be included in the installer ELF and PC setup host. If you download an
-already-built PC host, you can also place a `custom/` folder beside the host
-script or executable and put `theme.json`, `theme.css`, and `logo.svg` (or
-`logo.png` / `logo.webp`) inside it. Restart the host after editing the files.
-Those files are served locally and are never fetched from the internet. For
-local page work, use `make page` as usual; custom installer branding is bundled
-when you build the installer registry with `make registry` or `make all`. See
+is embedded in the installer ELF. With a PC host built from this version, you
+can also place `custom/` beside the downloaded host script or executable. Its
+`theme.json`, `theme.css`, and `logo.svg` (or `logo.png` / `logo.webp`) are
+embedded directly into the PC setup pages when served. Restart the host after
+editing them. This runtime folder styles the PC setup pages; the installer page
+served later by the PS5 uses the theme embedded in the installer ELF at build
+time. For local page work, use `make page` as usual; custom installer branding
+is bundled when you build the installer registry with `make registry` or `make all`. See
 [`custom/README.md`](custom/README.md) for the JSON shape and allowed values.
 
-This feature customizes the installer page only. The PS5 homescreen app icon is
+The PS5 homescreen app icon is
 generated separately from `assets/icon.svg`; replacing that asset customizes the
 icon in release builds. The PC setup host's title and icon are separate build
 settings.

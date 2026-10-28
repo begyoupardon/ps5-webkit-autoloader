@@ -115,6 +115,8 @@ registry: version page $(INSTALLER_LOGO)
 	elif [ -f "$(CUSTOM_LOGO_PNG)" ]; then cp "$(CUSTOM_LOGO_PNG)" $(STAGE)/logo.png; \
 	elif [ -f "$(CUSTOM_LOGO_WEBP)" ]; then cp "$(CUSTOM_LOGO_WEBP)" $(STAGE)/logo.webp; fi
 	@if [ -f "$(CUSTOM_CSS)" ]; then cp "$(CUSTOM_CSS)" $(STAGE)/theme.css; fi
+	@if [ ! -f "$(STAGE)/theme.json" ]; then printf '{}\n' > $(STAGE)/theme.json; fi
+	@touch $(STAGE)/theme.css
 	cp frontend/pointer/index.html $(STAGE)/app/index.html
 	@for chain in $(CHAINS); do \
 	    cp build/autoloader/$$chain.html $(STAGE)/app/$(BUILD_VERSION)/$$chain.html || exit 1; \

@@ -23,12 +23,35 @@
   var bar = element('div', 'progressBar', progress);
   var label = element('div', 'progressLabel', progress);
   var config = window.WKAL_PAGE || {};
+  var theme = window.WKAL_THEME || {};
+  if (theme.brand || theme.logoSrc) {
+    var header = document.createElement('div');
+    header.id = 'brandHeader';
+    if (theme.logoSrc) {
+      var logo = document.createElement('img');
+      logo.id = 'brandLogo';
+      logo.className = 'logo';
+      logo.src = theme.logoSrc;
+      logo.alt = theme.brand || 'Custom logo';
+      header.appendChild(logo);
+    }
+    if (theme.brand) element('h1', 'brandName', header, theme.brand);
+    loader.insertBefore(header, wrapper);
+  }
+  if (theme.colors) {
+    var colors = theme.colors;
+    var root = document.documentElement;
+    var keys = { background: '--theme-background', surface: '--theme-surface', border: '--theme-border', text: '--theme-text', muted: '--theme-muted', accent: '--theme-accent', accentEnd: '--theme-accent-end' };
+    Object.keys(keys).forEach(function (key) {
+      if (colors[key]) root.style.setProperty(keys[key], colors[key]);
+    });
+  }
   if (config.version) {
-    document.title = 'WebKit Autoloader v' + config.version + ' by PLK' +
+    document.title = (theme.title || 'WebKit Autoloader') + ' v' + config.version + ' by PLK' +
       (config.buildTime ? ' (built ' + config.buildTime + ')' : '');
   }
   var footer = element('div', 'footer', document.body);
-  element('div', 'buildInfo', footer, 'WebKit Autoloader' +
+  element('div', 'buildInfo', footer, (theme.brand || 'WebKit Autoloader') +
     (config.version ? ' v' + config.version : '') + ' by PLK' +
     (config.buildTime ? ' (built ' + config.buildTime + ')' : ''));
   var source = element('div', 'sourceInfo', footer, 'This project is free and open source: ');
